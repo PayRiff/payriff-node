@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 (2026-10-07)
+
+- First release on npm.
+
 ## 0.1.1 (2026-10-07)
 
 - Published as `@payriff/node` (the unscoped `payriff` name on npm is not ours).
