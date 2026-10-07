@@ -1,0 +1,32 @@
+{
+  "name": "payriff",
+  "version": "0.1.0",
+  "description": "Node.js client for the Payriff merchant API",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "tsc -p tsconfig.json && node --test \"build/test/**/*.test.js\"",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/payriff/payriff-node.git"
+  },
+  "keywords": [
+    "payriff",
+    "payments",
+    "azerbaijan"
+  ],
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2"
+  }
+}
