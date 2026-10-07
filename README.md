@@ -10,12 +10,21 @@ transactions, payouts and invoices.
 
 ## Installation
 
-> The package is not yet published to npm. Until then, install it from GitHub:
-> `npm install github:PayRiff/payriff-node#v0.1.1`
-
 ```bash
-npm install @payriff/node
+npm install github:PayRiff/payriff-node#v0.1.1
 ```
+
+Or in `package.json`:
+
+```json
+"dependencies": {
+  "@payriff/node": "github:PayRiff/payriff-node#v0.1.1"
+}
+```
+
+Works with any Node.js framework (Express, NestJS, Fastify, Next.js).
+
+> npm registry publishing is coming. After that, the command becomes `npm install @payriff/node`.
 
 ## Quick start
 
