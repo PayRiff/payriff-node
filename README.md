@@ -10,16 +10,17 @@ transactions, payouts and invoices.
 
 ## Installation
 
-> The package is not yet published to npm.
+> The package is not yet published to npm. Until then, install it from GitHub:
+> `npm install github:PayRiff/payriff-node#v0.1.1`
 
 ```bash
-npm install payriff
+npm install @payriff/node
 ```
 
 ## Quick start
 
 ```ts
-import { Payriff } from 'payriff';
+import { Payriff } from '@payriff/node';
 
 const payriff = new Payriff({ appKey: process.env.PAYRIFF_APP_KEY! });
 
@@ -34,7 +35,7 @@ const order = await payriff.orders.create({
 const paymentUrl = order.paymentUrl;
 ```
 
-CommonJS works too: `const { Payriff } = require('payriff');`
+CommonJS works too: `const { Payriff } = require('@payriff/node');`
 
 Create one `Payriff` instance and reuse it.
 
@@ -206,7 +207,7 @@ When an order changes state, Payriff POSTs JSON to the `callbackUrl` you set on 
 
 ```ts
 import express from 'express';
-import { parseOrderCallback } from 'payriff';
+import { parseOrderCallback } from '@payriff/node';
 
 app.post('/payriff/callback', express.json(), async (req, res) => {
   const notified = parseOrderCallback(req.body);   // also accepts the raw string or Buffer
@@ -240,7 +241,7 @@ only need to catch errors. Invalid arguments are rejected with a `TypeError` or 
 any request is sent.
 
 ```ts
-import { PayriffConnectionError, PayriffError, ValidationError } from 'payriff';
+import { PayriffConnectionError, PayriffError, ValidationError } from '@payriff/node';
 
 try {
   await payriff.orders.refund({ orderId });

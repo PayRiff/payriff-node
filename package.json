@@ -1,6 +1,6 @@
 {
-  "name": "payriff",
-  "version": "0.1.0",
+  "name": "@payriff/node",
+  "version": "0.1.1",
   "description": "Node.js client for the Payriff merchant API",
   "license": "MIT",
   "main": "dist/index.js",
@@ -14,11 +14,14 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test": "tsc -p tsconfig.json && node --test \"build/test/**/*.test.js\"",
-    "prepublishOnly": "npm run build"
+    "prepare": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/payriff/payriff-node.git"
+    "url": "git+https://github.com/PayRiff/payriff-node.git"
   },
   "keywords": [
     "payriff",
