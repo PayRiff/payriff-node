@@ -1,6 +1,6 @@
 {
-  "name": "@payriff/node",
-  "version": "0.1.2",
+  "name": "@payriff-sdk/node",
+  "version": "0.1.3",
   "description": "Node.js client for the Payriff merchant API",
   "license": "MIT",
   "main": "dist/index.js",

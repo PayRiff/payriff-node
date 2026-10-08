@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 (2026-10-08)
+
+- Published as `@payriff-sdk/node`.
+
 ## 0.1.2 (2026-10-07)
 
 - First release on npm.

@@ -11,7 +11,7 @@ transactions, payouts and invoices.
 ## Installation
 
 ```bash
-npm install @payriff/node
+npm install @payriff-sdk/node
 ```
 
 Works with any Node.js framework (Express, NestJS, Fastify, Next.js).
@@ -19,7 +19,7 @@ Works with any Node.js framework (Express, NestJS, Fastify, Next.js).
 ## Quick start
 
 ```ts
-import { Payriff } from '@payriff/node';
+import { Payriff } from '@payriff-sdk/node';
 
 const payriff = new Payriff({ appKey: process.env.PAYRIFF_APP_KEY! });
 
@@ -34,7 +34,7 @@ const order = await payriff.orders.create({
 const paymentUrl = order.paymentUrl;
 ```
 
-CommonJS works too: `const { Payriff } = require('@payriff/node');`
+CommonJS works too: `const { Payriff } = require('@payriff-sdk/node');`
 
 Create one `Payriff` instance and reuse it.
 
@@ -206,7 +206,7 @@ When an order changes state, Payriff POSTs JSON to the `callbackUrl` you set on 
 
 ```ts
 import express from 'express';
-import { parseOrderCallback } from '@payriff/node';
+import { parseOrderCallback } from '@payriff-sdk/node';
 
 app.post('/payriff/callback', express.json(), async (req, res) => {
   const notified = parseOrderCallback(req.body);   // also accepts the raw string or Buffer
@@ -240,7 +240,7 @@ only need to catch errors. Invalid arguments are rejected with a `TypeError` or 
 any request is sent.
 
 ```ts
-import { PayriffConnectionError, PayriffError, ValidationError } from '@payriff/node';
+import { PayriffConnectionError, PayriffError, ValidationError } from '@payriff-sdk/node';
 
 try {
   await payriff.orders.refund({ orderId });
