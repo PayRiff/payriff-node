@@ -1,15 +1,15 @@
 import type { Transport } from '../transport';
-import type { CompleteParams, CreateOrderParams, CreateOrderResponse, OrderInfo, RefundParams } from '../types';
+import type { CompleteParams, CreateOrderParams, CreateOrderResponse, Currency, OrderInfo, RefundParams } from '../types';
 import { compact, nonEmpty, pathSegment, required } from '../util';
 
 export class OrdersApi {
-  constructor(private readonly transport: Transport) {}
+  constructor(private readonly transport: Transport, private readonly defaultCurrency: Currency) {}
 
   async create(params: CreateOrderParams): Promise<CreateOrderResponse> {
     required(params, 'params');
     const body = compact({
       amount: required(params.amount, 'amount'),
-      currency: params.currency ?? 'AZN',
+      currency: params.currency ?? this.defaultCurrency,
       language: params.language,
       operation: params.operation ?? 'PURCHASE',
       description: params.description,

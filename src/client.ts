@@ -1,4 +1,3 @@
-import { CardEncryptor, PRODUCTION_CARD_ENCRYPTION_KEY, parsePublicKey } from './card';
 import { CardsApi } from './resources/cards';
 import { InvoicesApi } from './resources/invoices';
 import { OrdersApi } from './resources/orders';
@@ -6,16 +5,20 @@ import { PaymentsApi } from './resources/payments';
 import { PayoutsApi } from './resources/payouts';
 import { TransactionsApi } from './resources/transactions';
 import { Transport } from './transport';
+import type { Currency, Region } from './types';
 
 export interface PayriffOptions {
   appKey: string;
   merchantId?: string;
   timeout?: number;
-  cardEncryptionKey?: string;
+  region?: Region;
   baseUrl?: string;
 }
 
-const PRODUCTION_URL = 'https://api.payriff.com';
+const REGIONS: Record<Region, { baseUrl: string; currency: Currency }> = {
+  azerbaijan: { baseUrl: 'https://api.payriff.com', currency: 'AZN' },
+  saudi: { baseUrl: 'https://api.gccpay.sa', currency: 'SAR' },
+};
 
 export class Payriff {
   readonly orders: OrdersApi;
@@ -31,18 +34,20 @@ export class Payriff {
     }
     const timeout = options.timeout ?? 60_000;
     if (!Number.isFinite(timeout) || timeout <= 0) throw new RangeError('timeout must be a positive number of milliseconds');
+    const regionName = options.region ?? 'azerbaijan';
+    if (!Object.hasOwn(REGIONS, regionName)) throw new RangeError(`unknown region: ${regionName}`);
+    const region = REGIONS[regionName];
     const transport = new Transport({
-      baseUrl: options.baseUrl ?? PRODUCTION_URL,
+      baseUrl: options.baseUrl ?? region.baseUrl,
       appKey: options.appKey,
       merchantId: options.merchantId,
       timeout,
     });
-    const cardEncryptor = new CardEncryptor(parsePublicKey(options.cardEncryptionKey ?? PRODUCTION_CARD_ENCRYPTION_KEY));
-    this.orders = new OrdersApi(transport);
-    this.payments = new PaymentsApi(transport, cardEncryptor);
+    this.orders = new OrdersApi(transport, region.currency);
+    this.payments = new PaymentsApi(transport, region.currency);
     this.cards = new CardsApi(transport);
     this.transactions = new TransactionsApi(transport);
     this.payouts = new PayoutsApi(transport);
-    this.invoices = new InvoicesApi(transport);
+    this.invoices = new InvoicesApi(transport, region.currency);
   }
 }

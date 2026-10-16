@@ -1,9 +1,9 @@
 import type { Transport } from '../transport';
-import type { Invoice, InvoiceCreateParams, InvoiceDetails } from '../types';
+import type { Currency, Invoice, InvoiceCreateParams, InvoiceDetails } from '../types';
 import { compact, formatDateTime, nonEmpty, pathSegment, required } from '../util';
 
 export class InvoicesApi {
-  constructor(private readonly transport: Transport) {}
+  constructor(private readonly transport: Transport, private readonly defaultCurrency: Currency) {}
 
   async create(params: InvoiceCreateParams): Promise<Invoice> {
     required(params, 'params');
@@ -17,7 +17,7 @@ export class InvoicesApi {
       body: compact({
         amount: params.amount,
         amountDynamic: params.amountDynamic,
-        currencyType: params.currency ?? 'AZN',
+        currencyType: params.currency ?? this.defaultCurrency,
         languageType: params.language,
         fullName: params.fullName,
         email: params.email,

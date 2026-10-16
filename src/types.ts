@@ -1,4 +1,5 @@
 export type Currency = 'AZN' | 'USD' | 'EUR' | 'PKR' | 'AED' | 'SAR';
+export type Region = 'azerbaijan' | 'saudi';
 export type Language = 'AZ' | 'EN' | 'RU' | 'AR';
 export type Operation = 'PURCHASE' | 'PRE_AUTH' | 'COMPLETE' | 'REFUND' | 'REVERSE';
 export type AutoPaymentType = 'NONE' | 'DEFAULT' | 'RECURRING';
@@ -23,14 +24,6 @@ export type InvoiceStatus = Open<'PENDING' | 'ERROR' | 'EXPIRED' | 'PARTIAL' | '
 export interface Installment {
   type: InstallmentProductType;
   period: InstallmentPeriod;
-}
-
-export interface CardData {
-  pan: string;
-  cardHolder: string;
-  expiryMonth: string | number;
-  expiryYear: string | number;
-  cvv: string;
 }
 
 export interface CreateOrderParams {
@@ -63,19 +56,6 @@ export interface CompleteParams {
   orderId: string;
   amount?: number;
   callbackUrl?: string;
-}
-
-export interface DirectPayParams {
-  amount: number;
-  description: string;
-  card: CardData;
-  operation?: Operation;
-  currency?: Currency;
-  callbackUrl?: string;
-  threeDS?: boolean;
-  customFields?: Record<string, string>;
-  cardSave?: boolean;
-  requestRrn?: string;
 }
 
 export interface AutoPayParams {

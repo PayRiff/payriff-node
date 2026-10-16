@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (unreleased)
+
+- Added: Saudi Arabia support via `new Payriff({ ..., region: 'saudi' })`. It uses
+  `https://api.gccpay.sa` and defaults the currency to `SAR`. Azerbaijan (`AZN`) stays the default.
+- Removed: direct (host-to-host) card payments: `payments.directPay()`, the `CardData` and
+  `DirectPayParams` types and the `cardEncryptionKey` option. Use the hosted payment page
+  (`orders.create()`) instead.
+
 ## 0.1.3 (2026-10-08)
 
 - Published as `@payriff-sdk/node`.

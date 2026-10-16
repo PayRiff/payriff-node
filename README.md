@@ -1,12 +1,12 @@
 # Payriff Node.js SDK
 
-Node.js client for the Payriff merchant API: orders, direct (host-to-host) card payments, saved cards,
+Node.js client for the Payriff merchant API: orders, saved-card payments, saved cards,
 transactions, payouts and invoices.
 
 - Node.js 20 or newer
 - No runtime dependencies
 - TypeScript types included
-- Talks to `https://api.payriff.com`
+- Talks to `https://api.payriff.com` (Azerbaijan) or `https://api.gccpay.sa` (Saudi Arabia)
 
 ## Installation
 
@@ -45,16 +45,31 @@ Create one `Payriff` instance and reuse it.
 | `appKey` | yes | — | Application key from the Payriff dashboard. |
 | `merchantId` | for payouts and invoices | — | Merchant ID (e.g. `ES1000000`). |
 | `timeout` | no | `60000` | Request timeout in milliseconds. Bank operations can take tens of seconds. |
-| `cardEncryptionKey` | no | built-in Payriff key | Only if Payriff rotates the card-encryption key. Base64 or PEM. |
+| `region` | no | `'azerbaijan'` | API region: `'azerbaijan'` or `'saudi'`. Sets the base URL and the default currency. |
+| `baseUrl` | no | from `region` | Override the API URL, e.g. for testing. The currency still comes from `region`. |
 
 Keep the app key in an environment variable or secret store. Never commit it.
+
+### Saudi Arabia
+
+```ts
+const payriff = new Payriff({ appKey: process.env.PAYRIFF_APP_KEY!, region: 'saudi' });
+```
+
+| Region | API | Default currency |
+|---|---|---|
+| `'azerbaijan'` | `https://api.payriff.com` | `AZN` |
+| `'saudi'` | `https://api.gccpay.sa` | `SAR` |
+
+Use the app key from the dashboard of the same region (`dashboard.gccpay.sa` for Saudi Arabia).
+A `currency` passed on a request always wins over the region default.
 
 ## Orders
 
 ```ts
 const created = await payriff.orders.create({
   amount: 25,
-  currency: 'AZN',            // default AZN
+  currency: 'AZN',            // default: the region currency
   operation: 'PRE_AUTH',      // default PURCHASE
   language: 'AZ',
   description: 'Booking #77',
@@ -75,39 +90,9 @@ const receiptPdf: Buffer = await payriff.orders.downloadReceipt(created.orderId)
 `paymentStatus` is a string such as `APPROVED`, `DECLINED`, `PREAUTH_APPROVED` or `REFUNDED`. Values that
 this SDK version does not know yet are passed through unchanged.
 
-Amounts are JavaScript numbers in major units (`10.5` = 10.50 AZN).
+Amounts are JavaScript numbers in major units (`10.5` = 10.50 AZN or SAR).
 
-## Direct payments (host-to-host)
-
-You collect the card details yourself, and the SDK encrypts them before sending
-(AES-256-GCM + RSA-OAEP). Raw card data never leaves your server in clear text, but your
-systems still handle card data, so PCI DSS requirements apply to you.
-
-```ts
-const result = await payriff.payments.directPay({
-  amount: 1,
-  description: 'Order #1002',
-  callbackUrl: 'https://shop.example/payriff/callback',
-  requestRrn: 'order-1002',
-  card: {
-    pan: '4169 7413 3015 1979',
-    cardHolder: 'JOHN DOE',
-    expiryMonth: '11',
-    expiryYear: '27',
-    cvv: '123',
-  },
-});
-
-if (result.redirect) {
-  // 3-D Secure: send the customer's browser to result.redirectUrl.
-  // The final status arrives via your callback or payriff.orders.get(result.orderId).
-}
-```
-
-The SDK strips spaces and dashes from the card number, pads the month (`1` → `01`), expands a 2-digit
-year (`27` → `2027`) and rejects malformed values before any network call.
-
-### Charging a saved card
+## Charging a saved card
 
 ```ts
 const charge = await payriff.payments.autoPay({
